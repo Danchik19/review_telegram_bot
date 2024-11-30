@@ -1,5 +1,14 @@
 # token
 .env
 
+# .log
+*.log
+
 # report
-report.txt
+report.*
+
+# build
+build/
+
+# *.egg
+*.egg-info/
