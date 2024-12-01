@@ -1,23 +1,21 @@
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters.command import Command
 from aiogram.types import FSInputFile
+from .join_points import JoinPoints
 from ..logger import Logger, DEBUG
 
 
 class TelegramAdapter:
-    def __init__(self, token, process_file_func, process_archive_func):
+    def __init__(self, token):
         """
         TelegramAdapter отвечает за интеграцию с Telegram API.
         
         :param token: Токен бота Telegram.
-        :param process_file_func: Функция обработки одиночного файла.
-        :param process_archive_func: Функция обработки архива.
         """
 
         self.bot = Bot(token=token)
         self.dp = Dispatcher()
-        self.process_file_func = process_file_func
-        self.process_archive_func = process_archive_func
+        self.join_points = JoinPoints()
 
         self.dp.message.register(self.cmd_start, Command("start"))
         self.dp.message.register(self.handle_document, F.document)
@@ -44,11 +42,11 @@ class TelegramAdapter:
             file_content = await self.bot.download(document)
 
             if document.file_name.endswith(".zip"):
-                result_report = self.process_archive_func(file_content.read())
+                result_report = self.join_points.process_archive(file_content.read())
                 self.logger.info("The archive has been processed")
                 r_type = "архив"
             elif document.file_name.endswith(".py"):
-                result_report = self.process_file_func(file_content.read())
+                result_report = self.join_points.process_file(file_content.read())
                 self.logger.info("The file has been processed")
                 r_type = "файл"
             else:
@@ -75,5 +73,5 @@ class TelegramAdapter:
         """
         Запуск бота в режиме polling
         """
-        
+
         await self.dp.start_polling(self.bot)

@@ -1,5 +1,5 @@
 import asyncio
-from ..adapters.api import process_file, process_archive, Settings, TelegramAdapter
+from ..adapters.api import Settings, TelegramAdapter
 from ..adapters.logger import Logger, DEBUG
 
 
@@ -12,9 +12,7 @@ class BotComposite:
         self.settings = Settings()
         
         self.telegram_adapter = TelegramAdapter(
-            token=self.settings.telegram_token,
-            process_file_func=process_file,
-            process_archive_func=process_archive,           
+            token=self.settings.telegram_token          
         )
 
         self.logger = Logger(name="BotComposite", level=DEBUG, log_file="bot_composite.log")

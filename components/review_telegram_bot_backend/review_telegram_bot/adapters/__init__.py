@@ -1,5 +1,5 @@
-from .api import app, settings, telegram_adapter
+from .api import app, join_points, settings, telegram_adapter
 from .logger import logger
 
 
-__all__ = ["app", "settings", "telegram_adapter", "logger"]
+__all__ = ["app", "join_points", "settings", "telegram_adapter", "logger"]
